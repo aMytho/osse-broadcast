@@ -4,14 +4,14 @@ import (
 	"context"
 	"log"
 	"osse-broadcast/internal/messages"
-	server "osse-broadcast/internal/server"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
 var rdb *redis.Client
 
-func Connect(host string) {
+func Connect(host string, channel chan messages.OsseEvent) {
 	rdb = redis.NewClient(&redis.Options{
 		Addr: host,
 	})
@@ -19,10 +19,10 @@ func Connect(host string) {
 	log.Println("Connected to redis on " + host)
 
 	// Start Redis pub/sub listener
-	go listenRedis()
+	go listenRedis(channel)
 }
 
-func listenRedis() {
+func listenRedis(channel chan messages.OsseEvent) {
 	ctx := context.Background()
 	pubsub := rdb.Subscribe(ctx, "osse_database_private-scan")
 
@@ -37,10 +37,14 @@ func listenRedis() {
 		}
 
 		// Broadcast to connected SSE clients
-		broadcastMessage(event)
+		channel <- event
 	}
 }
 
-func broadcastMessage(message messages.OsseEvent) {
-	server.Clients <- message
+// Gets a redis value from a key. Returns the message and an error
+func GetValue(key string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	return rdb.Get(ctx, key).Result()
 }

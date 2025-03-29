@@ -67,7 +67,7 @@ func Start(host string, allowOrigin string) {
 		}
 	}()
 
-	log.Println("Osee Broadcast running on " + host)
+	log.Println("Osse Broadcast running on " + host)
 	runServer(httpServer)
 }
 

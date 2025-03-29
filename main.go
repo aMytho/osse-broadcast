@@ -11,7 +11,7 @@ func main() {
 	config := config.GetOsseConfig()
 
 	// Connect to Redis/Valkey
-	redis.Connect(config.RedisHost)
+	redis.Connect(config.RedisHost, server.Clients)
 
 	// Start HTTP server with SSE route
 	server.Start(config.HttpHost, config.OsseClientOrigin)

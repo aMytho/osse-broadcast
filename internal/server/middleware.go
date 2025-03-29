@@ -1,9 +1,18 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
+	"osse-broadcast/internal/redis"
+)
 
 func validateUserToken(userID string, token string) bool {
-	return true
+	// Check that the user is permitted to access osse-broadcast
+	userToken, err := redis.GetValue("osse_database_sse_access:" + userID)
+	if err != nil {
+		return false
+	}
+
+	return userToken == token
 }
 
 func cors(h http.Handler, allowedOrigin string) http.Handler {
