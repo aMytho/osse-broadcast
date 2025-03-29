@@ -5,6 +5,6 @@
 
 export OSSE_BROADCAST_HOST="localhost:9003"
 export OSSE_REDIS_HOST="localhost:6379"
-export OSSE_HOST="localhost:4200"
+export OSSE_ALLOWED_ORIGIN="localhost:4200"
 
 go run .
