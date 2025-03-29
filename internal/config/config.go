@@ -3,15 +3,17 @@ package config
 import "os"
 
 type OsseConfig struct {
-	HttpHost  string
-	RedisHost string
+	HttpHost         string
+	RedisHost        string
+	OsseClientOrigin string
 }
 
 func GetOsseConfig() OsseConfig {
 	httpHost := getEnvVar("OSSE_BROADCAST_HOST")
 	redisHost := getEnvVar("OSSE_REDIS_HOST")
+	osseClientOrigin := getEnvVar("OSSE_HOST")
 
-	return OsseConfig{httpHost, redisHost}
+	return OsseConfig{httpHost, redisHost, osseClientOrigin}
 }
 
 func getEnvVar(key string) string {
