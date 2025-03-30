@@ -61,7 +61,7 @@ func (s ScanCompleted) GetType() string {
 }
 
 type ScanFailed struct {
-	Reason int `json:"message"`
+	Reason string `json:"message"`
 }
 
 func (s ScanFailed) GetType() string {

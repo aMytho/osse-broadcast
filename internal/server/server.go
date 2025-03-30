@@ -79,7 +79,7 @@ func createSseSetup() *sse.Server {
 			userID := s.Req.URL.Query().Get("id")
 			token := s.Req.URL.Query().Get("token")
 
-			println("User attempted to connect.")
+			log.Println("User attempted to connect.")
 
 			// Validate the userID and token
 			if !validateUserToken(userID, token) {
