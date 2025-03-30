@@ -9,7 +9,7 @@ type OsseConfig struct {
 }
 
 func GetOsseConfig() OsseConfig {
-	httpHost := getEnvVar("OSSE_BROADCAST_HOST")
+	httpHost := getEnvVar("OSSE_BROADCAST_URL")
 	redisHost := getEnvVar("OSSE_REDIS_HOST")
 	osseClientOrigin := getEnvVar("OSSE_ALLOWED_ORIGIN")
 
