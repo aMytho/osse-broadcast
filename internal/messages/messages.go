@@ -10,6 +10,7 @@ const (
 	SCANCOMPLETE   string = "ScanCompleted"
 	SCANPROGRESSED string = "ScanProgressed"
 	SCANFAILED     string = "ScanFailed"
+	SCANCANCELLED  string = "ScanCancelled"
 )
 
 var AllTopics = []string{
@@ -17,6 +18,7 @@ var AllTopics = []string{
 	SCANCOMPLETE,
 	SCANPROGRESSED,
 	SCANFAILED,
+	SCANCANCELLED,
 }
 
 // The raw message sent from redis.
@@ -68,6 +70,14 @@ func (s ScanFailed) GetType() string {
 	return SCANFAILED
 }
 
+type ScanCancelled struct {
+	DirectoriesScanned int `json:"directoriesScannedBeforeCancellation"`
+}
+
+func (s ScanCancelled) GetType() string {
+	return SCANCANCELLED
+}
+
 func GetEventFromMessage(message string) (OsseEvent, error) {
 	var base BaseEvent
 	err := json.Unmarshal([]byte(message), &base)
@@ -101,6 +111,13 @@ func GetEventFromMessage(message string) (OsseEvent, error) {
 
 	case "App\\Events\\ScanFailed":
 		var data ScanFailed
+		err = json.Unmarshal(base.Data, &data)
+		if err == nil {
+			return data, nil
+		}
+
+	case "App\\Events\\ScanCancelled":
+		var data ScanCancelled
 		err = json.Unmarshal(base.Data, &data)
 		if err == nil {
 			return data, nil
