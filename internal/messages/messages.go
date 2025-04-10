@@ -54,7 +54,6 @@ func (s ScanProgressed) GetType() string {
 }
 
 type ScanCompleted struct {
-	// TODO: Check that tis is right, and that ignored fields are ignored
 	DirectoryCount int `json:"directoryCount"`
 }
 
@@ -71,7 +70,7 @@ func (s ScanFailed) GetType() string {
 }
 
 type ScanCancelled struct {
-	DirectoriesScanned int `json:"directoriesScannedBeforeCancellation"`
+	DirectoriesScannedBeforeCancellation int `json:"directoriesScannedBeforeCancellation"`
 }
 
 func (s ScanCancelled) GetType() string {
