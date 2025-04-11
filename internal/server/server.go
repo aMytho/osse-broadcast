@@ -63,7 +63,7 @@ func Start(host string, allowOrigin string) {
 			message.Type = eventName
 
 			sseHandler.Publish(message, messages.AllTopics...)
-			println("Sent Message to client")
+			log.Println("Sent Message to client")
 		}
 	}()
 

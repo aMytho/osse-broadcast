@@ -3,6 +3,7 @@ package messages
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 )
 
 const (
@@ -81,7 +82,7 @@ func GetEventFromMessage(message string) (OsseEvent, error) {
 	var base BaseEvent
 	err := json.Unmarshal([]byte(message), &base)
 	if err != nil {
-		println("Error parsing event: ", err)
+		log.Println("Error parsing event: ", err)
 		return nil, err
 	}
 
@@ -129,7 +130,7 @@ func GetEventFromMessage(message string) (OsseEvent, error) {
 func GetJsonOfEvent(event OsseEvent) (string, error) {
 	jsonData, err := json.Marshal(event)
 	if err != nil {
-		println("Error with converting osse event to json.")
+		log.Println("Error with converting osse event to json.")
 		return "", err
 	}
 

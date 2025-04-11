@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 type OsseConfig struct {
 	HttpHost         string
@@ -20,8 +23,8 @@ func getEnvVar(key string) string {
 	result, varExists := os.LookupEnv(key)
 
 	if !varExists {
-		println("The environment variable " + key + " was not set. Please set this var in the osse config file.")
-		println("Osse Broadcast is shutting down!")
+		log.Println("The environment variable " + key + " was not set. Please set this var in the osse config file.")
+		log.Println("Osse Broadcast is shutting down!")
 		os.Exit(1)
 	}
 

@@ -32,7 +32,7 @@ func listenRedis(channel chan messages.OsseEvent) {
 		// Parse the message into a Message type
 		event, err := messages.GetEventFromMessage(msg.Payload)
 		if err != nil {
-			println("Received message from Osse that osse-broadcast cannot parse...")
+			log.Println("Received message from Osse that osse-broadcast cannot parse...")
 			continue
 		}
 
