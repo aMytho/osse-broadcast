@@ -24,7 +24,7 @@ func Connect(host string, channel chan messages.OsseEvent) {
 
 func listenRedis(channel chan messages.OsseEvent) {
 	ctx := context.Background()
-	pubsub := rdb.Subscribe(ctx, "osse_database_private-scan")
+	pubsub := rdb.Subscribe(ctx, "osse_database_scan")
 
 	for msg := range pubsub.Channel() {
 		log.Println("Received message:", msg.Payload)
