@@ -7,6 +7,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -v -o /usr/local/bin/app .
+RUN go build -v -o /usr/local/bin/osse-broadcast .
 
-ENTRYPOINT [ "prod-run.sh" ]
+ENTRYPOINT [ "sh", "prod-run.sh" ]

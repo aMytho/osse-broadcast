@@ -9,4 +9,4 @@ until nc -z valkey 6379; do
   sleep 1
 done
 
-./app
+osse-broadcast
