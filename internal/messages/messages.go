@@ -43,11 +43,12 @@ func (s ScanStarted) GetType() string {
 }
 
 type ScanProgressed struct {
-	DirectoryName      string `json:"directoryName"`
-	FilesScanned       int    `json:"filesScanned"`
-	FilesSkipped       int    `json:"filesSkipped"`
-	TotalDirectories   int    `json:"totalDirectories"`
-	ScannedDirectories int    `json:"scannedDirectories"`
+	DirectoryName       string `json:"directoryName"`
+	FilesScanned        int    `json:"filesScanned"`
+	FilesSkipped        int    `json:"filesSkipped"`
+	TotalDirectories    int    `json:"totalDirectories"`
+	ScannedDirectories  int    `json:"scannedDirectories"`
+	NextDirectoryToScan string `json:"nextDirectoryToScan"` // May be null (empty string in go)
 }
 
 func (s ScanProgressed) GetType() string {
