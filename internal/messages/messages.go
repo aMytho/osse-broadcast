@@ -10,7 +10,8 @@ const (
 	SCANSTARTED    string = "ScanStarted"
 	SCANCOMPLETE   string = "ScanCompleted"
 	SCANPROGRESSED string = "ScanProgressed"
-	SCANFAILED     string = "ScanFailed"
+	SCANERROR      string = "ScanError"  // Problem, scan not stopped.
+	SCANFAILED     string = "ScanFailed" // Scan stopped.
 	SCANCANCELLED  string = "ScanCancelled"
 )
 
@@ -18,6 +19,7 @@ var AllTopics = []string{
 	SCANSTARTED,
 	SCANCOMPLETE,
 	SCANPROGRESSED,
+	SCANERROR,
 	SCANFAILED,
 	SCANCANCELLED,
 }
@@ -63,6 +65,14 @@ func (s ScanCompleted) GetType() string {
 	return SCANCOMPLETE
 }
 
+type ScanError struct {
+	Message string `json:"message"`
+}
+
+func (s ScanError) GetType() string {
+	return SCANERROR
+}
+
 type ScanFailed struct {
 	Reason string `json:"message"`
 }
@@ -105,6 +115,13 @@ func GetEventFromMessage(message string) (OsseEvent, error) {
 
 	case "App\\Events\\ScanCompleted":
 		var data ScanCompleted
+		err = json.Unmarshal(base.Data, &data)
+		if err == nil {
+			return data, nil
+		}
+
+	case "App\\Events\\ScanError":
+		var data ScanError
 		err = json.Unmarshal(base.Data, &data)
 		if err == nil {
 			return data, nil
