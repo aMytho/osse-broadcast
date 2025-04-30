@@ -37,20 +37,30 @@ type OsseEvent interface {
 // The individual message types from Osse
 
 type ScanStarted struct {
-	Directories int `json:"directories"`
+	Directories []ScanDirectory `json:"directories"`
 }
 
 func (s ScanStarted) GetType() string {
 	return SCANSTARTED
 }
 
+type ScanDirectory struct {
+	ID           uint    `json:"id"`
+	ScanJobID    uint    `json:"scanJobID"`
+	Path         string  `json:"path"`
+	Status       string  `json:"status"`
+	FilesScanned uint    `json:"filesScanned"`
+	FilesSkipped uint    `json:"filesSkipped"`
+	StartedAt    *string `json:"startedAt"`
+	FinishedAt   *string `json:"finishedAt"`
+}
+
 type ScanProgressed struct {
-	DirectoryName       string `json:"directoryName"`
-	FilesScanned        int    `json:"filesScanned"`
-	FilesSkipped        int    `json:"filesSkipped"`
-	TotalDirectories    int    `json:"totalDirectories"`
-	ScannedDirectories  int    `json:"scannedDirectories"`
-	NextDirectoryToScan string `json:"nextDirectoryToScan"` // May be null (empty string in go)
+	DirectoryID   uint   `json:"directoryID"`
+	DirectoryName string `json:"directoryName"`
+	FilesScanned  int    `json:"filesScanned"`
+	FilesSkipped  int    `json:"filesSkipped"`
+	Status        string `json:"status"`
 }
 
 func (s ScanProgressed) GetType() string {
