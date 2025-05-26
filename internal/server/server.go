@@ -3,9 +3,12 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"osse-broadcast/internal/messages"
+	"osse-broadcast/internal/redis"
 	"time"
 
 	"github.com/tmaxmax/go-sse"
@@ -18,7 +21,9 @@ func Start(host string, allowOrigin string) {
 	sseHandler := createSseSetup()
 
 	mux := http.NewServeMux()
+	// /sse is the only cors route.
 	mux.Handle("/sse", sseHandler)
+	mux.HandleFunc("/stream", createFilestreamSetup)
 
 	httpServer := &http.Server{
 		Addr:              host,
@@ -92,6 +97,49 @@ func createSseSetup() *sse.Server {
 			}, true
 		},
 	}
+}
+
+func createFilestreamSetup(w http.ResponseWriter, r *http.Request) {
+	// Read the token and user id
+	token := r.URL.Query().Get("token")
+	trackID := r.URL.Query().Get("trackID")
+	userID := r.URL.Query().Get("id")
+
+	if userID == "" {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+
+	filePath, err := redis.GetValue("osse_database_file_access:" + userID + ":" + trackID + ":" + token)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+	}
+
+	// Make sure the file path is absolute (don't serve relatie files, although that should be impossible with how we do this.)
+	fmt.Println(filePath)
+	if filePath == "" {
+		http.Error(w, "invalid file path", http.StatusBadRequest)
+		return
+	}
+
+	// Open the file
+	f, err := os.Open(filePath)
+	if err != nil {
+		http.Error(w, "file not found", http.StatusNotFound)
+		return
+	}
+	defer f.Close()
+
+	// Get file info
+	stat, err := f.Stat()
+	if err != nil || stat.IsDir() {
+		http.Error(w, "invalid file", http.StatusBadRequest)
+		return
+	}
+
+	// Go literally handles everything I wrote in manual PHP related to HTTP range requests.
+	// woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo - amytho, 7:31 PM
+	http.ServeContent(w, r, stat.Name(), stat.ModTime(), f)
 }
 
 func runServer(s *http.Server) error {

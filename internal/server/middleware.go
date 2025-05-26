@@ -21,7 +21,10 @@ func cors(h http.Handler, allowedOrigin string) http.Handler {
 		origin := r.Header.Get("origin")
 		if origin == "http://"+allowedOrigin || origin == "https://"+allowedOrigin {
 			w.Header().Set("Access-Control-Allow-Origin", origin)
+			h.ServeHTTP(w, r)
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."))
 		}
-		h.ServeHTTP(w, r)
 	})
 }
